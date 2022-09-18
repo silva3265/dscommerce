@@ -1,14 +1,17 @@
 package com.devsuperior.descommerce.services;
 
 
-import com.devsuperior.descommerce.dto.ProductDTO;
-import com.devsuperior.descommerce.entities.Product;
-import com.devsuperior.descommerce.repositories.ProductRepository;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
+import com.devsuperior.descommerce.dto.ProductDTO;
+import com.devsuperior.descommerce.entities.Product;
+import com.devsuperior.descommerce.repositories.ProductRepository;
 
 @Service
 public class ProductService {
@@ -20,6 +23,13 @@ public class ProductService {
     public ProductDTO findById(Long id){
         Product product = repository.findById(id).get();
         return new ProductDTO(product);
+
+    }
+    //Metodo de serviço que busca todos os produtos
+    @Transactional(readOnly = true)
+    public Page <ProductDTO> findAll(Pageable pageable){
+        Page<Product> result = repository.findAll(pageable); //busca todos os produtos do banco de dados
+        return result.map(x -> new ProductDTO(x));
 
     }
 }
